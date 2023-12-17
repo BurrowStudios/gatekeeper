@@ -2,6 +2,7 @@ package org.burrow_studios.gatekeeper.net;
 
 import com.sun.net.httpserver.HttpServer;
 import org.burrow_studios.gatekeeper.database.Database;
+import org.burrow_studios.gatekeeper.net.handlers.EntityHandler;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
@@ -20,6 +21,8 @@ public class Server {
         this.httpServer.createContext("/", exchange -> {
             exchange.sendResponseHeaders(404, -1);
         });
+
+        this.httpServer.createContext("/entities", new EntityHandler(database));
 
         this.httpServer.start();
     }
