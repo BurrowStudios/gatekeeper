@@ -88,4 +88,8 @@ public class Database {
             return entity;
         }
     }
+
+    public void stop() throws SQLException {
+        this.connection.close();
+    }
 }

@@ -36,5 +36,13 @@ public class Main {
         LogUtil.init();
 
         Gatekeeper gatekeeper = new Gatekeeper();
+
+        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+            try {
+                gatekeeper.stop();
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+        }));
     }
 }

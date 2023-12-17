@@ -42,4 +42,10 @@ public class Gatekeeper {
     public Server getServer() {
         return server;
     }
+
+    void stop() throws Exception {
+        LOG.log(Level.WARNING, "Shutting down");
+        server.stop();
+        database.stop();
+    }
 }
