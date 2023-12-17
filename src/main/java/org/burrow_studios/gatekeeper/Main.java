@@ -1,9 +1,12 @@
 package org.burrow_studios.gatekeeper;
 
 import org.burrow_studios.gatekeeper.util.ResourceUtil;
+import org.burrow_studios.gatekeeper.util.logging.LogUtil;
 
 import java.io.File;
+import java.io.IOException;
 import java.net.URISyntaxException;
+import java.util.logging.Logger;
 
 public class Main {
     static {
@@ -26,10 +29,14 @@ public class Main {
         DIR = f;
     }
 
+    private static final Logger LOG = Logger.getLogger("MAIN");
+
     /** JVM entrypoint */
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
         if (VERSION == null)
             throw new AssertionError("Unknown version");
         System.out.printf(" version %s...%n", VERSION);
+
+        LogUtil.init();
     }
 }
