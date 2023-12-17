@@ -1,5 +1,7 @@
 package org.burrow_studios.gatekeeper;
 
+import org.burrow_studios.gatekeeper.util.ResourceUtil;
+
 import java.io.File;
 import java.net.URISyntaxException;
 
@@ -7,6 +9,9 @@ public class Main {
     static {
         System.out.print("Starting Gatekeeper");
     }
+
+    /** Static application version. */
+    public static final String VERSION = ResourceUtil.getVersion();
 
     /** Directory in which the JAR ist located. */
     public static final File DIR;
@@ -23,6 +28,8 @@ public class Main {
 
     /** JVM entrypoint */
     public static void main(String[] args) {
-
+        if (VERSION == null)
+            throw new AssertionError("Unknown version");
+        System.out.printf(" version %s...%n", VERSION);
     }
 }

@@ -59,6 +59,18 @@
                 </configuration>
             </plugin>
         </plugins>
+
+        <!-- Export resources -->
+        <resources>
+            <!-- Write version into resource file -->
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>true</filtering>
+                <includes>
+                    <include>meta.properties</include>
+                </includes>
+            </resource>
+        </resources>
     </build>
 
 
