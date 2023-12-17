@@ -70,6 +70,8 @@ public class Database {
 
     public @Nullable JsonObject getEntity(long id) throws SQLException {
         try (PreparedStatement stmt = connection.prepareStatement(STMT_GET_ENTITY_ID)) {
+            stmt.setLong(1, id);
+
             ResultSet result = stmt.executeQuery();
 
             if (!result.next())

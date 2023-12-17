@@ -23,3 +23,4 @@ Returns a list of all known entity ids.
 
 ## Get user</br>![http-get] /entities/[{entity.id}](#entity-object)
 Returns a single [entity](#entity-object) object.
+If no entity with the specified id exists this will return `204 No Content`.

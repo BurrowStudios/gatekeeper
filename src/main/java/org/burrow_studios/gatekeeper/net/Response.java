@@ -15,6 +15,7 @@ public final class Response {
     public static final Response ERROR_NOT_IMPLEMENTED = new Response(501);
 
     private static final Gson gson = new GsonBuilder()
+            .setPrettyPrinting()
             .serializeNulls()
             .create();
 
