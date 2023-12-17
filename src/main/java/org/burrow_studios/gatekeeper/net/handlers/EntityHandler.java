@@ -1,18 +1,16 @@
 package org.burrow_studios.gatekeeper.net.handlers;
 
 import com.google.gson.JsonObject;
-import org.burrow_studios.gatekeeper.database.Database;
 import org.burrow_studios.gatekeeper.net.Response;
 import org.burrow_studios.gatekeeper.net.RouteHandler;
+import org.burrow_studios.gatekeeper.net.Server;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;
 
 public class EntityHandler extends RouteHandler {
-    private final Database database;
-
-    public EntityHandler(@NotNull Database database) {
-        this.database = database;
+    public EntityHandler(@NotNull Server server) {
+        super(server);
     }
 
     @Override
@@ -22,7 +20,7 @@ public class EntityHandler extends RouteHandler {
         if (segments.length == 1) {
             assert Objects.equals(segments[0], "entities");
 
-            return Response.ofJson(200, database.getEntities());
+            return Response.ofJson(200, getDatabase().getEntities());
         }
 
         String idStr = segments[1];
@@ -34,7 +32,7 @@ public class EntityHandler extends RouteHandler {
             return Response.ERROR_BAD_REQUEST.withBody("Invalid id format".getBytes());
         }
 
-        JsonObject entity = database.getEntity(id);
+        JsonObject entity = getDatabase().getEntity(id);
 
         if (entity == null)
             return new Response(204);

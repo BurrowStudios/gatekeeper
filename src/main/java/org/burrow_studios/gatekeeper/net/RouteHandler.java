@@ -2,6 +2,7 @@ package org.burrow_studios.gatekeeper.net;
 
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
+import org.burrow_studios.gatekeeper.database.Database;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
@@ -10,6 +11,12 @@ import java.util.logging.Logger;
 
 public abstract class RouteHandler implements HttpHandler {
     protected static final Logger LOG = Logger.getLogger(RouteHandler.class.getSimpleName());
+
+    protected final Server server;
+
+    protected RouteHandler(@NotNull Server server) {
+        this.server = server;
+    }
 
     @Override
     public final void handle(HttpExchange exchange) throws IOException {
@@ -45,4 +52,8 @@ public abstract class RouteHandler implements HttpHandler {
     }
 
     public abstract @NotNull Response handle(String method, String path, String[] segments) throws Exception;
+
+    protected @NotNull Database getDatabase() {
+        return this.server.getGatekeeper().getDatabase();
+    }
 }

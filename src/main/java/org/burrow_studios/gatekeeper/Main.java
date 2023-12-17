@@ -1,16 +1,10 @@
 package org.burrow_studios.gatekeeper;
 
-import org.burrow_studios.gatekeeper.database.Database;
-import org.burrow_studios.gatekeeper.net.Server;
 import org.burrow_studios.gatekeeper.util.ResourceUtil;
 import org.burrow_studios.gatekeeper.util.logging.LogUtil;
 
 import java.io.File;
-import java.io.FileReader;
 import java.net.URISyntaxException;
-import java.util.Properties;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 public class Main {
     static {
@@ -33,8 +27,6 @@ public class Main {
         DIR = f;
     }
 
-    private static final Logger LOG = Logger.getLogger("MAIN");
-
     /** JVM entrypoint */
     public static void main(String[] args) throws Exception {
         if (VERSION == null)
@@ -43,18 +35,6 @@ public class Main {
 
         LogUtil.init();
 
-        LOG.log(Level.INFO, "Creating config");
-        ResourceUtil.createDefault("config.properties");
-        Properties config = new Properties();
-        config.load(new FileReader(new File(DIR, "config.properties")));
-
-        String sqlHost     = config.getProperty("sql.host");
-        String sqlPort     = config.getProperty("sql.port");
-        String sqlDatabase = config.getProperty("sql.database");
-        String sqlUser     = config.getProperty("sql.user");
-        String sqlPass     = config.getProperty("sql.pass");
-
-        Database database = new Database(sqlHost, sqlPort, sqlDatabase, sqlUser, sqlPass);
-        Server   server   = new Server(database);
+        Gatekeeper gatekeeper = new Gatekeeper();
     }
 }

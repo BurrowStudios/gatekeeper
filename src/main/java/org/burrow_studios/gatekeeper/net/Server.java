@@ -1,7 +1,7 @@
 package org.burrow_studios.gatekeeper.net;
 
 import com.sun.net.httpserver.HttpServer;
-import org.burrow_studios.gatekeeper.database.Database;
+import org.burrow_studios.gatekeeper.Gatekeeper;
 import org.burrow_studios.gatekeeper.net.handlers.EntityHandler;
 import org.jetbrains.annotations.NotNull;
 
@@ -9,12 +9,12 @@ import java.io.IOException;
 import java.net.InetSocketAddress;
 
 public class Server {
-    private final Database database;
+    private final Gatekeeper gatekeeper;
 
     private final HttpServer httpServer;
 
-    public Server(@NotNull Database database) throws IOException {
-        this.database = database;
+    public Server(@NotNull Gatekeeper gatekeeper) throws IOException {
+        this.gatekeeper = gatekeeper;
 
         this.httpServer = HttpServer.create(new InetSocketAddress(8080), 0);
 
@@ -22,12 +22,16 @@ public class Server {
             exchange.sendResponseHeaders(404, -1);
         });
 
-        this.httpServer.createContext("/entities", new EntityHandler(database));
+        this.httpServer.createContext("/entities", new EntityHandler(this));
 
         this.httpServer.start();
     }
 
     public void stop() {
         this.httpServer.stop(4);
+    }
+
+    public Gatekeeper getGatekeeper() {
+        return gatekeeper;
     }
 }
