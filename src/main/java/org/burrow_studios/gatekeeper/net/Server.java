@@ -3,6 +3,7 @@ package org.burrow_studios.gatekeeper.net;
 import com.sun.net.httpserver.HttpServer;
 import org.burrow_studios.gatekeeper.Gatekeeper;
 import org.burrow_studios.gatekeeper.net.handlers.EntityHandler;
+import org.burrow_studios.gatekeeper.net.handlers.NotFoundHandler;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
@@ -22,10 +23,7 @@ public class Server {
         LOG.log(Level.INFO, "Starting HTTP server on port 8080");
         this.httpServer = HttpServer.create(new InetSocketAddress(8080), 0);
 
-        this.httpServer.createContext("/", exchange -> {
-            exchange.sendResponseHeaders(404, -1);
-        });
-
+        this.httpServer.createContext("/", new NotFoundHandler(this));
         this.httpServer.createContext("/entities", new EntityHandler(this));
 
         LOG.log(Level.INFO, "Binding server...");
