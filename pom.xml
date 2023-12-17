@@ -62,6 +62,12 @@
 
         <!-- Export resources -->
         <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <includes>
+                    <include>config.properties</include>
+                </includes>
+            </resource>
             <!-- Write version into resource file -->
             <resource>
                 <directory>src/main/resources</directory>

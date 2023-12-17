@@ -6,7 +6,10 @@ import org.burrow_studios.gatekeeper.util.ResourceUtil;
 import org.burrow_studios.gatekeeper.util.logging.LogUtil;
 
 import java.io.File;
+import java.io.FileReader;
 import java.net.URISyntaxException;
+import java.util.Properties;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class Main {
@@ -40,7 +43,18 @@ public class Main {
 
         LogUtil.init();
 
-        Database database = new Database();
+        LOG.log(Level.INFO, "Creating config");
+        ResourceUtil.createDefault("config.properties");
+        Properties config = new Properties();
+        config.load(new FileReader(new File(DIR, "config.properties")));
+
+        String sqlHost     = config.getProperty("sql.host");
+        String sqlPort     = config.getProperty("sql.port");
+        String sqlDatabase = config.getProperty("sql.database");
+        String sqlUser     = config.getProperty("sql.user");
+        String sqlPass     = config.getProperty("sql.pass");
+
+        Database database = new Database(sqlHost, sqlPort, sqlDatabase, sqlUser, sqlPass);
         Server   server   = new Server(database);
     }
 }
