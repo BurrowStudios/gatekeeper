@@ -6,6 +6,8 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.sql.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class Database {
     private static final String STMT_CREATE_TABLE_PERMISSIONS        = "CREATE TABLE IF NOT EXISTS `permissions` (`id` INT NOT NULL AUTO_INCREMENT, `name` TEXT NOT NULL, PRIMARY KEY (`id`), UNIQUE (`name`));";
@@ -15,6 +17,8 @@ public class Database {
     private static final String STMT_GET_ENTITY_ID = "SELECT DISTINCT `entity_id` FROM `entity_permissions` WHERE `entity_id` = ?;";
     private static final String STMT_GET_ENTITIES = "SELECT DISTINCT `entity_id` AS `id` FROM `entity_permissions`;";
     private static final String STMT_GET_ENTITY = "SELECT `permissions`.`name` AS `permission`, `entity_permissions`.`value` FROM `entity_permissions` INNER JOIN `permissions` ON `entity_permissions`.`permission_id` = `permissions`.`id` WHERE `entity_permissions`.`entity_id` = ? ORDER BY `permissions`.`name`;";
+
+    private static final Logger LOG = Logger.getLogger(Database.class.getSimpleName());
 
     private final Connection connection;
 
@@ -26,11 +30,17 @@ public class Database {
             @NotNull String pass
     ) throws SQLException {
         String url = String.format("jdbc:mysql://%s:%s/%s", host, port, database);
+
+        LOG.log(Level.INFO, "Initiating database connection to " + url);
         this.connection = DriverManager.getConnection(url, user, pass);
+
         this.init();
+
+        LOG.log(Level.INFO, "Database is online");
     }
 
     public void init() {
+        LOG.log(Level.INFO, "Creating tables");
         try {
             final PreparedStatement createPermissions       = connection.prepareStatement(STMT_CREATE_TABLE_PERMISSIONS);
             final PreparedStatement createEntityPermissions = connection.prepareStatement(STMT_CREATE_TABLE_ENTITY_PERMISSIONS);
@@ -90,6 +100,7 @@ public class Database {
     }
 
     public void stop() throws SQLException {
+        LOG.log(Level.INFO, "Closing connection");
         this.connection.close();
     }
 }

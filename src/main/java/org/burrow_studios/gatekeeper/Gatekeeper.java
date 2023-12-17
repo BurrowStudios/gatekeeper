@@ -47,5 +47,6 @@ public class Gatekeeper {
         LOG.log(Level.WARNING, "Shutting down");
         server.stop();
         database.stop();
+        LOG.log(Level.INFO, "OK bye");
     }
 }
