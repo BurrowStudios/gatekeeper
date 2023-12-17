@@ -3,6 +3,7 @@ package org.burrow_studios.gatekeeper.database;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.sql.*;
 
@@ -11,6 +12,7 @@ public class Database {
     private static final String STMT_CREATE_TABLE_ENTITY_PERMISSIONS = "CREATE TABLE IF NOT EXISTS `entity_permissions` (`entity_id` BIGINT(20) NOT NULL, `permission_id` INT NOT NULL, `value` BOOLEAN NOT NULL, PRIMARY KEY (`entity_id`, `permission_id`));";
     private static final String STMT_ALTER_TABLE_ENTITY_PERMISSIONS  = "ALTER TABLE `entity_permissions` ADD FOREIGN KEY (`permission_id`) REFERENCES `permissions`(`id`) ON DELETE NO ACTION ON UPDATE RESTRICT;";
 
+    private static final String STMT_GET_ENTITY_ID = "SELECT DISTINCT `entity_id` FROM `entity_permissions` WHERE `entity_id` = ?;";
     private static final String STMT_GET_ENTITIES = "SELECT DISTINCT `entity_id` AS `id` FROM `entity_permissions`;";
     private static final String STMT_GET_ENTITY = "SELECT `permissions`.`name` AS `permission`, `entity_permissions`.`value` FROM `entity_permissions` INNER JOIN `permissions` ON `entity_permissions`.`permission_id` = `permissions`.`id` WHERE `entity_permissions`.`entity_id` = ? ORDER BY `permissions`.`name`;";
 
@@ -42,7 +44,7 @@ public class Database {
         }
     }
 
-    public JsonArray getEntities() throws SQLException {
+    public @NotNull JsonArray getEntities() throws SQLException {
         try (PreparedStatement stmt = connection.prepareStatement(STMT_GET_ENTITIES)) {
             ResultSet result = stmt.executeQuery();
 
@@ -56,7 +58,14 @@ public class Database {
         }
     }
 
-    public JsonObject getEntity(long id) throws SQLException {
+    public @Nullable JsonObject getEntity(long id) throws SQLException {
+        try (PreparedStatement stmt = connection.prepareStatement(STMT_GET_ENTITY_ID)) {
+            ResultSet result = stmt.executeQuery();
+
+            if (!result.next())
+                return null;
+        }
+
         try (PreparedStatement stmt = connection.prepareStatement(STMT_GET_ENTITY)) {
             stmt.setLong(1, id);
 

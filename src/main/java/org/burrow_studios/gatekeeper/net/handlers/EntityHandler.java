@@ -1,5 +1,6 @@
 package org.burrow_studios.gatekeeper.net.handlers;
 
+import com.google.gson.JsonObject;
 import org.burrow_studios.gatekeeper.database.Database;
 import org.burrow_studios.gatekeeper.net.Response;
 import org.burrow_studios.gatekeeper.net.RouteHandler;
@@ -33,7 +34,10 @@ public class EntityHandler extends RouteHandler {
             return Response.ERROR_BAD_REQUEST.withBody("Invalid id format".getBytes());
         }
 
-        // TODO: check whether this entity exists
-        return Response.ofJson(200, database.getEntity(id));
+        JsonObject entity = database.getEntity(id);
+
+        if (entity == null)
+            return new Response(204);
+        return Response.ofJson(200, entity);
     }
 }
