@@ -15,14 +15,13 @@ public class EntityHandler extends RouteHandler {
     }
 
     @Override
-    public @NotNull Response handle(String method, String path, String[] segments) {
+    public @NotNull Response handle(String method, String path, String[] segments) throws Exception {
         assert segments.length > 0;
 
         if (segments.length == 1) {
             assert Objects.equals(segments[0], "entities");
 
-            // TODO: return list of all known entities
-            return Response.ERROR_NOT_IMPLEMENTED;
+            return Response.ofJson(200, database.getEntities());
         }
 
         String idStr = segments[1];
@@ -34,7 +33,7 @@ public class EntityHandler extends RouteHandler {
             return Response.ERROR_BAD_REQUEST.withBody("Invalid id format".getBytes());
         }
 
-        // TODO: return entity
-        return Response.ERROR_NOT_IMPLEMENTED;
+        // TODO: check whether this entity exists
+        return Response.ofJson(200, database.getEntity(id));
     }
 }

@@ -44,5 +44,5 @@ public abstract class RouteHandler implements HttpHandler {
         }
     }
 
-    public abstract @NotNull Response handle(String method, String path, String[] segments);
+    public abstract @NotNull Response handle(String method, String path, String[] segments) throws Exception;
 }
