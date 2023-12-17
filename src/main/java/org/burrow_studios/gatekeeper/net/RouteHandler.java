@@ -34,6 +34,8 @@ public abstract class RouteHandler implements HttpHandler {
             return;
         }
 
+        LOG.log(Level.FINER, "Processing request " + requestMethod + " " + requestPath);
+
         Response response = handle0(requestMethod, requestPath, requestPathSegments);
 
         exchange.sendResponseHeaders(response.getCode(), response.getBodyLength());
