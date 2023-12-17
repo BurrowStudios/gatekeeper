@@ -9,7 +9,6 @@ import java.nio.file.NotDirectoryException;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.util.Date;
-import java.util.logging.SimpleFormatter;
 import java.util.logging.*;
 
 public class LogUtil {
