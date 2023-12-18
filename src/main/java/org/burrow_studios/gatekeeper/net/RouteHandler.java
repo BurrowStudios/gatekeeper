@@ -30,7 +30,7 @@ public abstract class RouteHandler implements HttpHandler {
             requestMethod       = exchange.getRequestMethod();
             requestPath         = exchange.getRequestURI().getPath();
             requestPathSegments = requestPath.substring(1).split("/");
-            requestBody         = new String(exchange.getRequestBody().readAllBytes(), StandardCharsets.UTF_16);
+            requestBody         = new String(exchange.getRequestBody().readAllBytes(), StandardCharsets.UTF_8);
         } catch (Exception e) {
             LOG.log(Level.WARNING, "Encountered an exception when attempting to prepare a request", e);
             exchange.sendResponseHeaders(Response.ERROR_INTERNAL_SERVER_ERROR.getCode(), -1);

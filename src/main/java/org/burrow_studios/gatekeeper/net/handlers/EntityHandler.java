@@ -58,7 +58,7 @@ public class EntityHandler extends RouteHandler {
             return Response.ERROR_METHOD_NOT_ALLOWED;
         }
 
-        if (segments.length < 3)
+        if (segments.length != 2)
             return Response.ERROR_NOT_FOUND;
 
         if (!method.equals("GET"))
