@@ -1,5 +1,8 @@
 package org.burrow_studios.gatekeeper.net;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonElement;
 import com.sun.net.httpserver.HttpServer;
 import org.burrow_studios.gatekeeper.Gatekeeper;
 import org.burrow_studios.gatekeeper.net.handlers.EntityHandler;
@@ -13,6 +16,11 @@ import java.util.logging.Logger;
 
 public class Server {
     private static final Logger LOG = Logger.getLogger(Server.class.getSimpleName());
+
+    private static final Gson GSON = new GsonBuilder()
+            .setPrettyPrinting()
+            .serializeNulls()
+            .create();
 
     private final Gatekeeper gatekeeper;
     private final HttpServer httpServer;
@@ -38,5 +46,13 @@ public class Server {
 
     public @NotNull Gatekeeper getGatekeeper() {
         return gatekeeper;
+    }
+
+    public static JsonElement deserializeJson(String rawJson) {
+        return GSON.fromJson(rawJson, JsonElement.class);
+    }
+
+    public static String serializeJson(JsonElement json) {
+        return GSON.toJson(json);
     }
 }

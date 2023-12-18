@@ -1,7 +1,5 @@
 package org.burrow_studios.gatekeeper.net;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
 import org.jetbrains.annotations.NotNull;
 
@@ -14,11 +12,6 @@ public final class Response {
     public static final Response ERROR_METHOD_NOT_ALLOWED = new Response(405);
     public static final Response ERROR_INTERNAL_SERVER_ERROR = new Response(500);
     public static final Response ERROR_NOT_IMPLEMENTED = new Response(501);
-
-    private static final Gson gson = new GsonBuilder()
-            .setPrettyPrinting()
-            .serializeNulls()
-            .create();
 
     private final int code;
     private final byte[] body;
@@ -65,13 +58,13 @@ public final class Response {
     }
 
     public Response withBody(JsonElement json) {
-        return this.withBody(gson.toJson(json));
+        return this.withBody(Server.serializeJson(json));
     }
 
     /* - - - */
 
     public static Response ofJson(int code, JsonElement json) {
-        String contentString = gson.toJson(json);
+        String contentString = Server.serializeJson(json);
         Map<String, String> headers = Map.of("Content-Type", "application/json");
         return new Response(code, contentString.getBytes(), headers);
     }
