@@ -18,9 +18,9 @@
 | name  | string | Unique permission identifier                             |
 | value | bool   | True, if the entity has this permission or false if not. |
 
-## List user ids</br>![http-get] /entities
+## List entity ids</br>![http-get] /entities
 Returns a list of all known entity ids.
 
-## Get user</br>![http-get] /entities/[{entity.id}](#entity-object)
+## Get entity</br>![http-get] /entities/[{entity.id}](#entity-object)
 Returns a single [entity](#entity-object) object.
 If no entity with the specified id exists this will return `204 No Content`.
