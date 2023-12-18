@@ -18,6 +18,11 @@ public class Database {
     private static final String STMT_GET_ENTITIES = "SELECT DISTINCT `entity_id` AS `id` FROM `entity_permissions`;";
     private static final String STMT_GET_ENTITY = "SELECT `permissions`.`name` AS `permission`, `entity_permissions`.`value` FROM `entity_permissions` INNER JOIN `permissions` ON `entity_permissions`.`permission_id` = `permissions`.`id` WHERE `entity_permissions`.`entity_id` = ? ORDER BY `permissions`.`name`;";
 
+    private static final String STMT_DELETE_PERMISSION = "DELETE FROM `entity_permissions` WHERE `entity_id` = ? AND `permission_id` = (SELECT `id` FROM `permissions` WHERE `name` = ?);";
+
+    private static final String STMT_ADD_PERMISSION = "INSERT IGNORE INTO `permissions`(`name`) VALUES(?)";
+    private static final String STMT_SET_PERMISSION = "INSERT INTO `entity_permissions`(`entity_id`, `permission_id`, `value`) VALUES(?, (SELECT `id` FROM `permissions` WHERE `name` = ?), ?) ON DUPLICATE KEY UPDATE `value` = ?;";
+
     private static final Logger LOG = Logger.getLogger(Database.class.getSimpleName());
 
     private final Connection connection;
@@ -98,6 +103,36 @@ public class Database {
             entity.add("overrides", overrides);
 
             return entity;
+        }
+    }
+
+    public void removePermission(long id, String permission) throws SQLException {
+        try (PreparedStatement stmt = connection.prepareStatement(STMT_DELETE_PERMISSION)) {
+            stmt.setLong(1, id);
+            stmt.setString(2, permission);
+
+            stmt.execute();
+        }
+    }
+
+    public void createPermission(String permission) throws SQLException {
+        try (PreparedStatement stmt = connection.prepareStatement(STMT_ADD_PERMISSION)) {
+            stmt.setString(1, permission);
+
+            stmt.execute();
+        }
+    }
+
+    public void setPermission(long id, String permission, boolean value) throws SQLException {
+        this.createPermission(permission);
+
+        try (PreparedStatement stmt = connection.prepareStatement(STMT_SET_PERMISSION)) {
+            stmt.setLong(1, id);
+            stmt.setString(2, permission);
+            stmt.setBoolean(3, value);
+            stmt.setBoolean(4, value);
+
+            stmt.execute();
         }
     }
 

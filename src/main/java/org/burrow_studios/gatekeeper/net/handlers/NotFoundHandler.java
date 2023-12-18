@@ -11,7 +11,7 @@ public class NotFoundHandler extends RouteHandler {
     }
 
     @Override
-    public @NotNull Response handle(String method, String path, String[] segments) {
+    public @NotNull Response handle(String method, String path, String[] segments, String content) {
         return Response.ERROR_NOT_FOUND;
     }
 }

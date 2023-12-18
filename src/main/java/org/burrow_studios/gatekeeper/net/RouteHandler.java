@@ -6,6 +6,7 @@ import org.burrow_studios.gatekeeper.database.Database;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -23,11 +24,13 @@ public abstract class RouteHandler implements HttpHandler {
         final String   requestMethod;
         final String   requestPath;
         final String[] requestPathSegments;
+        final String   requestBody;
 
         try {
             requestMethod       = exchange.getRequestMethod();
             requestPath         = exchange.getRequestURI().getPath();
             requestPathSegments = requestPath.substring(1).split("/");
+            requestBody         = new String(exchange.getRequestBody().readAllBytes(), StandardCharsets.UTF_8);
         } catch (Exception e) {
             LOG.log(Level.WARNING, "Encountered an exception when attempting to prepare a request", e);
             exchange.sendResponseHeaders(Response.ERROR_INTERNAL_SERVER_ERROR.getCode(), -1);
@@ -36,7 +39,7 @@ public abstract class RouteHandler implements HttpHandler {
 
         LOG.log(Level.FINER, "Processing request " + requestMethod + " " + requestPath);
 
-        Response response = handle0(requestMethod, requestPath, requestPathSegments);
+        Response response = handle0(requestMethod, requestPath, requestPathSegments, requestBody);
 
         exchange.sendResponseHeaders(response.getCode(), response.getBodyLength());
         exchange.getResponseBody().write(response.getBody());
@@ -44,16 +47,16 @@ public abstract class RouteHandler implements HttpHandler {
         exchange.close();
     }
 
-    private @NotNull Response handle0(String method, String path, String[] pathSegments) {
+    private @NotNull Response handle0(String method, String path, String[] pathSegments, String content) {
         try {
-            return this.handle(method, path, pathSegments);
+            return this.handle(method, path, pathSegments, content);
         } catch (Exception e) {
             LOG.log(Level.WARNING, "Encountered an exception when attempting to prepare a request", e);
             return Response.ERROR_INTERNAL_SERVER_ERROR;
         }
     }
 
-    public abstract @NotNull Response handle(String method, String path, String[] segments) throws Exception;
+    public abstract @NotNull Response handle(String method, String path, String[] segments, String content) throws Exception;
 
     protected @NotNull Database getDatabase() {
         return this.server.getGatekeeper().getDatabase();
