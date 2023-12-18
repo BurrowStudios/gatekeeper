@@ -1,4 +1,5 @@
 [http-get]: https://img.shields.io/badge/GET-505CDC
+[http-delete]: https://img.shields.io/badge/DELETE-A12828
 
 # Entity resource
 
@@ -24,3 +25,6 @@ Returns a list of all known entity ids.
 ## Get user</br>![http-get] /entities/[{entity.id}](#entity-object)
 Returns a single [entity](#entity-object) object.
 If no entity with the specified id exists this will return `204 No Content`.
+
+## Remove permission override</br>![http-delete] /entities/[{entity.id}](#entity-object)/[{permission.name}](#permission-structure)
+Removes a permission override from an entity. Returns `204 No Content` on success.

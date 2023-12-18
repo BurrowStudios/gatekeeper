@@ -11,6 +11,7 @@ import java.util.Objects;
 public final class Response {
     public static final Response ERROR_BAD_REQUEST = new Response(400);
     public static final Response ERROR_NOT_FOUND = new Response(404);
+    public static final Response ERROR_METHOD_NOT_ALLOWED = new Response(405);
     public static final Response ERROR_INTERNAL_SERVER_ERROR = new Response(500);
     public static final Response ERROR_NOT_IMPLEMENTED = new Response(501);
 

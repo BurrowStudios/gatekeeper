@@ -18,6 +18,8 @@ public class Database {
     private static final String STMT_GET_ENTITIES = "SELECT DISTINCT `entity_id` AS `id` FROM `entity_permissions`;";
     private static final String STMT_GET_ENTITY = "SELECT `permissions`.`name` AS `permission`, `entity_permissions`.`value` FROM `entity_permissions` INNER JOIN `permissions` ON `entity_permissions`.`permission_id` = `permissions`.`id` WHERE `entity_permissions`.`entity_id` = ? ORDER BY `permissions`.`name`;";
 
+    private static final String STMT_DELETE_PERMISSION = "DELETE FROM `entity_permissions` WHERE `entity_id` = ? AND `permission_id` = (SELECT `id` FROM `permissions` WHERE `name` = '?');";
+
     private static final Logger LOG = Logger.getLogger(Database.class.getSimpleName());
 
     private final Connection connection;
@@ -98,6 +100,15 @@ public class Database {
             entity.add("overrides", overrides);
 
             return entity;
+        }
+    }
+
+    public void removePermission(long id, String permission) throws SQLException {
+        try (PreparedStatement stmt = connection.prepareStatement(STMT_DELETE_PERMISSION)) {
+            stmt.setLong(1, id);
+            stmt.setString(2, permission);
+
+            stmt.execute();
         }
     }
 

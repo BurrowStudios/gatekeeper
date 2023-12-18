@@ -20,6 +20,8 @@ public class EntityHandler extends RouteHandler {
         if (segments.length == 1) {
             assert Objects.equals(segments[0], "entities");
 
+            if (!method.equals("GET"))
+                return Response.ERROR_METHOD_NOT_ALLOWED;
             return Response.ofJson(200, getDatabase().getEntities());
         }
 
@@ -31,6 +33,22 @@ public class EntityHandler extends RouteHandler {
         } catch (NumberFormatException e) {
             return Response.ERROR_BAD_REQUEST.withBody("Invalid id format".getBytes());
         }
+
+        if (segments.length == 3) {
+            String permission = segments[2];
+
+            if (!method.equals("DELETE"))
+                return Response.ERROR_METHOD_NOT_ALLOWED;
+
+            getDatabase().removePermission(id, permission);
+            return new Response(204);
+        }
+
+        if (segments.length < 3)
+            return Response.ERROR_NOT_FOUND;
+
+        if (!method.equals("GET"))
+            return Response.ERROR_METHOD_NOT_ALLOWED;
 
         JsonObject entity = getDatabase().getEntity(id);
 
